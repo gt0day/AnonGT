@@ -23,7 +23,7 @@ ___
 ## Watch Video!
 ___
 
-[<img src="thumbnail.png" width="100%">](https://www.youtube.com/watch?v=MBKklMeE_uE&t "AnonGT")
+[<img src="https://i3.ytimg.com/vi/MBKklMeE_uE/maxresdefault.jpg" width="100%">](https://www.youtube.com/watch?v=MBKklMeE_uE&t "AnonGT")
 
 ## AnonGT Install
 ___
