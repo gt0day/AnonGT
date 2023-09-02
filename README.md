@@ -27,7 +27,7 @@ ___
 
 ## AnonGT Install
 ___
-> git clone https://github.com/gt0day/AnonGT;cd AnonGT && sudo bash install.sh;exit; 
+> git clone https://github.com/gt0day/AnonGT;cd AnonGT && sudo bash install.sh;
 
 ## AnonGT Commands
 ___
