@@ -7,9 +7,9 @@ fi
 
 echo "AnonGT Installer"
 
-rm -r "/usr/share/anongt" > /dev/null 2>&1
-rm -r "/usr/bin/anongt" > /dev/null 2>&1
-rm -r "/var/lib/anongt" > /dev/null 2>&1
+rm -r "/usr/share/anongt" 
+rm -r "/usr/bin/anongt" 
+rm -r "/var/lib/anongt" 
 
 sudo apt update
 sudo apt install -y apt-transport-https lsb-release curl
