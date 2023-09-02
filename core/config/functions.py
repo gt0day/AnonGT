@@ -80,9 +80,6 @@ def check_update():
             INFO("Go to https://github.com/gt0day/AnonGT")
         else:
             MSG("AnonGT Latest Version.")
-
-    except Exception as e:
-        ERROR(e)
     except:
         ERROR("Please Check Your Internet Connection")
 
