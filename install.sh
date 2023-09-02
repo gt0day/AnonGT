@@ -11,10 +11,8 @@ sudo rm -r /usr/share/AnonGT /usr/bin/anongt /var/lib/anongt
 
 sudo apt update
 sudo apt install -y apt-transport-https lsb-release curl
-echo "deb [signed-by=/usr/share/keyrings/i2p-archive-keyring.gpg] https://deb.i2p2.de/ $(dpkg --status tzdata | grep Provides | cut -f2 -d'-') main" \
-  | sudo tee /etc/apt/sources.list.d/i2p.list
+echo "deb [signed-by=/usr/share/keyrings/i2p-archive-keyring.gpg] https://deb.i2p2.de/ $(dpkg --status tzdata | grep Provides | cut -f2 -d'-') main" | sudo tee /etc/apt/sources.list.d/i2p.list
 curl -o i2p-archive-keyring.gpg https://geti2p.net/_static/i2p-archive-keyring.gpg
-gpg --keyid-format long --import --import-options show-only --with-fingerprint i2p-archive-keyring.gpg
 sudo cp i2p-archive-keyring.gpg /usr/share/keyrings
 sudo ln -sf /usr/share/keyrings/i2p-archive-keyring.gpg /etc/apt/trusted.gpg.d/i2p-archive-keyring.gpg
 sudo rm -r i2p-archive-keyring.gpg
