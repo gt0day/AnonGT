@@ -17,7 +17,8 @@ def about():
         {green("Changing Mac Address")}   
 
         {red("[Telegram]")}                                                                
-        {green("https://t.me/gt0day")}                                                                                                   
+        {green("https://t.me/gt0day")}    
+        
         {red("[Youtube]")}                                                                 
         {green("https://youtube.com/@GT0day")}                                               
 
