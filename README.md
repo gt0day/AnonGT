@@ -16,7 +16,6 @@ ___
 > ### clear configs & logs
 > ### firefox browser anonymization
 > ### Changing Mac Address
-> ### I2P Services
 
 ###### Please always check for updates
 
