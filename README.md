@@ -64,7 +64,7 @@ ___
 
 ### Revert Mac Address For All Interfaces
 
-> ### sudo anongt rvgmac
+> ### sudo anongt rvmac
 
 ### Clear Configs & Logs
 
