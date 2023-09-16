@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-from core.config.functions import check_root, listToString, clear, exec_command
+from core.config.functions import check_root, listToString, clear
 from core.config.librareis import sys
 from core.assets.banner import banner
 from core.script.Anonymous import Anonymous
+
 
 ################################################################################
 #                                                                              #
@@ -15,13 +16,13 @@ from core.script.Anonymous import Anonymous
 # clear configs & logs                                                         #
 # firefox browser anonymization                                                #
 # Changing Mac Address                                                         #
-# I2P Services                                                                 #
 #                                                                              #
 #                                                                              #
 # AUTHORS                                                                      #
 # https://t.me/gtsec                                                           #
 #                                                                              #
 ################################################################################
+
 
 def AnonGT():
     check_root()
@@ -43,10 +44,10 @@ def AnonGT():
         Anonymous.Reverte_Mac()
     elif cmd == "wipe":
         Anonymous.Wipe()
-    elif cmd == "starti2p":
-        Anonymous.StartI2P()
-    elif cmd == "stopi2p":
-        Anonymous.StopI2P()
+    # elif cmd == "starti2p":
+    #     Anonymous.StartI2P()
+    # elif cmd == "stopi2p":
+    #     Anonymous.StopI2P()
     elif cmd == "checku":
         Anonymous.CheckUpdate()
     elif cmd == "about":

@@ -1,9 +1,23 @@
 from core.config.librareis import *
-from core.config.config import BACKUPDIR, CURRTENTDIR, TORRC, TOR_UID, TOR_PORT, TOR_DNS, TOR_EXCLUDE
+from core.config.config import (
+    BACKUPDIR,
+    CURRTENTDIR,
+    TORRC,
+    TOR_UID,
+    TOR_PORT,
+    TOR_DNS,
+    TOR_EXCLUDE,
+)
 from core.assets.alerts import *
 from core.assets.banner import logo, banner
 from core.assets.about import about
-from core.config.functions import exec_command, get_process, clear, is_started, is_i2pstarted, check_update
+from core.config.functions import (
+    exec_command,
+    get_process,
+    clear,
+    is_started,
+    check_update,
+)
 
 
 # Anonymous Mode Functions
@@ -17,7 +31,7 @@ def check_backup_dir():
 def start_service(s):
     cmd = ["systemctl", "is-active", s]
     service = get_process(cmd)
-    if service != 'active':
+    if service != "active":
         WARN(s + " is not active")
         exec_command(f"systemctl start {s}")
         MSG(f"started {s} service")
@@ -31,7 +45,7 @@ def start_service(s):
 def stop_service(s):
     cmd = ["systemctl", "is-active", s]
     service = get_process(cmd)
-    if service == 'active':
+    if service == "active":
         WARN(s + " is active")
         exec_command(f"systemctl stop {s}")
         MSG(f"stopped {s} service")
@@ -42,10 +56,16 @@ def stop_service(s):
 def start_browser_anonymization():
     MSG("firefox browser anonymization started")
     if path.isdir("/etc/firefox-esr") == True or path.isdir("/etc/firefox") == True:
-        exec_command(f"cp {CURRTENTDIR}/core/sources/anongt.js /etc/firefox-esr > /dev/null")
-        exec_command(f"cp {CURRTENTDIR}/core/sources/anongt.js /etc/firefox > /dev/null")
+        exec_command(
+            f"cp {CURRTENTDIR}/core/sources/anongt.js /etc/firefox-esr > /dev/null"
+        )
+        exec_command(
+            f"cp {CURRTENTDIR}/core/sources/anongt.js /etc/firefox > /dev/null"
+        )
     else:
-        WARN("Browser anonymization only supports firefox and firefox not found on your system")
+        WARN(
+            "Browser anonymization only supports firefox and firefox not found on your system"
+        )
 
 
 def stop_browser_anonymization():
@@ -60,7 +80,13 @@ def safekill():
     exec_command("service network-manager force-reload > /dev/null 2>&1")
     # kill processes
     exec_command(
-        "killall -q dnsmasq nscd chrome dropbox skype icedove thunderbird firefox firefox-esr chromium xchat hexchat transmission steam firejail pidgin /usr/lib/firefox-esr/firefox-esr")
+        "killall -q dnsmasq nscd chrome dropbox skype icedove thunderbird firefox firefox-esr chromium xchat hexchat transmission steam firejail pidgin /usr/lib/firefox-esr/firefox-esr"
+    )
+
+    # remove cache
+    exec_command(
+        "bleachbit -c bash.history system.cache system.clipboard system.custom system.recent_documents system.rotated_logs system.tmp system.trash adobe_reader.cache chromium.cache chromium.session chromium.history chromium.form_history elinks.history emesene.cache epiphany.cache firefox.cache firefox.crash_reports firefox.url_history firefox.forms flash.cache flash.cookies google_chrome.cache google_chrome.history google_chrome.form_history google_chrome.search_engines google_chrome.session google_earth.temporary_files links2.history opera.cache opera.form_history opera.history > /dev/null 2>&1"
+    )
 
     MSG("dangerous processes & applications killed")
 
@@ -86,15 +112,24 @@ def wipe():
     exec_command("dhclient -r > /dev/null 2>&1")
     exec_command("rm -f /var/lib/dhcp/dhclient* > /dev/null 2>&1")
 
-    # remove cache
-    exec_command(
-        "bleachbit -c bash.history system.cache system.clipboard system.custom system.recent_documents system.rotated_logs system.tmp system.trash adobe_reader.cache chromium.cache chromium.session chromium.history chromium.form_history elinks.history emesene.cache epiphany.cache firefox.cache firefox.crash_reports firefox.url_history firefox.forms flash.cache flash.cookies google_chrome.cache google_chrome.history google_chrome.form_history google_chrome.search_engines google_chrome.session google_earth.temporary_files links2.history opera.cache opera.form_history opera.history > /dev/null 2>&1")
-
     # clear logs
     log_list = (
-        "/var/log/messages", "/var/log/auth.log", "/var/log/kern.log", "/var/log/cron.log", "/var/log/maillog",
-        "/var/log/boot.log", "/var/log/mysqld.log", "/var/log/secure", "/var/log/utmp", "/var/log/wtmp",
-        "/var/log/yum.log", "/var/log/system.log", "/var/log/DiagnosticMessages", "~/.zsh_history", "~/.bash_history")
+        "/var/log/messages",
+        "/var/log/auth.log",
+        "/var/log/kern.log",
+        "/var/log/cron.log",
+        "/var/log/maillog",
+        "/var/log/boot.log",
+        "/var/log/mysqld.log",
+        "/var/log/secure",
+        "/var/log/utmp",
+        "/var/log/wtmp",
+        "/var/log/yum.log",
+        "/var/log/system.log",
+        "/var/log/DiagnosticMessages",
+        "~/.zsh_history",
+        "~/.bash_history",
+    )
     for log in log_list:
         if path.isfile(log) == True or path.isdir(log) == True:
             exec_command(f"shred -vfzu {log} > /dev/null 2>&1")
@@ -105,7 +140,10 @@ def wipe():
 # get ip
 def get_info():
     try:
-        get_info = get("http://ip-api.com/json/?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query", verify=True)
+        get_info = get(
+            "http://ip-api.com/json/?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query",
+            verify=True,
+        )
 
         ip = get_info.json()["query"]
         status = get_info.json()["status"]
@@ -131,7 +169,6 @@ def get_info():
         mobile = get_info.json()["mobile"]
         proxy = get_info.json()["proxy"]
         hosting = get_info.json()["hosting"]
-
 
         info = f"""
     #IP: {ip}
@@ -226,7 +263,7 @@ def restore_sysctl():
 
 # configure nameservers
 def gen_resolv_conf():
-    nameservers = ''' 
+    nameservers = """ 
 # generated by anongt
 nameserver 127.0.0.1
 nameserver 1.1.1.1
@@ -235,7 +272,7 @@ nameserver 208.67.222.222
 nameserver 208.67.220.220
 nameserver 8.8.8.8
 nameserver 8.8.4.4
-'''
+"""
     exec_command(f'cat > "/etc/resolv.conf" <<EOF {nameservers}')
     exec_command("chmod 644 /etc/resolv.conf")
     MSG("configured nameservers")
@@ -243,7 +280,7 @@ nameserver 8.8.4.4
 
 # configure tor
 def gen_torrc():
-    torconfig = f''' 
+    torconfig = f""" 
 # generated by anongt
 User {TOR_UID}
 DataDirectory /var/lib/tor
@@ -254,7 +291,7 @@ AutomapHostsSuffixes .exit,.onion
 TransPort 127.0.0.1:{TOR_PORT} IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
 SocksPort 127.0.0.1:9050 IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
 ControlPort 9051
-HashedControlPassword 16:CDB54331C01EBF746021C0192920B313A08B18FD351B3E8D859EA8C0E4
+HashedControlPassword 16:5F620905DFFAC449600612AEE018C59D62198F8DFBD2B4C746E05376D7
 #use tor to resolve domain names
 DNSPort 127.0.0.1:{TOR_DNS}
 #daemonize
@@ -273,7 +310,7 @@ MaxCircuitDirtiness 600
 MaxClientCircuitsPending 48
 UseEntryGuards 1
 EnforceDistinctSubnets 1
-'''
+"""
 
     exec_command(f'cat > "{TORRC}" <<EOF {torconfig}')
     exec_command(f"chmod 644 {TORRC}")
@@ -283,22 +320,32 @@ EnforceDistinctSubnets 1
 # get uid owner
 # TOR_UID = get_process(["id", "-u", "debian-tor"])
 
+
 # apply iptables rules
 def apply_iptables_rules():
     # set iptables nat
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -m owner --uid-owner {TOR_UID} -j RETURN")
+    exec_command(
+        f"/usr/sbin/iptables -t nat -A OUTPUT -m owner --uid-owner {TOR_UID} -j RETURN"
+    )
 
     # set dns redirect
     exec_command(
-        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}")
+        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
+    )
     exec_command(
-        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport 53 -j REDIRECT --to-ports {TOR_DNS}")
+        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
+    )
     exec_command(
-        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m owner --uid-owner {TOR_UID} -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}")
+        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m owner --uid-owner {TOR_UID} -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
+    )
 
     # resolve .onion domains mapping 10.192.0.0/10 address space
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p tcp -d 10.192.0.0/10 -j REDIRECT --to-ports {TOR_PORT}")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p udp -d 10.192.0.0/10 -j REDIRECT --to-ports {TOR_PORT}")
+    exec_command(
+        f"/usr/sbin/iptables -t nat -A OUTPUT -p tcp -d 10.192.0.0/10 -j REDIRECT --to-ports {TOR_PORT}"
+    )
+    exec_command(
+        f"/usr/sbin/iptables -t nat -A OUTPUT -p udp -d 10.192.0.0/10 -j REDIRECT --to-ports {TOR_PORT}"
+    )
 
     # exlude locals
     cmd = f""" 
@@ -310,15 +357,25 @@ def apply_iptables_rules():
     exec_command(cmd)
 
     # redirect all other output through tor
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports {TOR_PORT}")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p udp -j REDIRECT --to-ports {TOR_PORT}")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p icmp -j REDIRECT --to-ports {TOR_PORT}")
+    exec_command(
+        f"/usr/sbin/iptables -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports {TOR_PORT}"
+    )
+    exec_command(
+        f"/usr/sbin/iptables -t nat -A OUTPUT -p udp -j REDIRECT --to-ports {TOR_PORT}"
+    )
+    exec_command(
+        f"/usr/sbin/iptables -t nat -A OUTPUT -p icmp -j REDIRECT --to-ports {TOR_PORT}"
+    )
 
     # accept already established connections
-    exec_command("/usr/sbin/iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT")
+    exec_command(
+        "/usr/sbin/iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+    )
 
     # allow only tor output
-    exec_command(f"/usr/sbin/iptables -A OUTPUT -m owner --uid-owner {TOR_UID} -j ACCEPT")
+    exec_command(
+        f"/usr/sbin/iptables -A OUTPUT -m owner --uid-owner {TOR_UID} -j ACCEPT"
+    )
     exec_command("/usr/sbin/iptables -A OUTPUT -j REJECT")
 
     # TESTING block all incoming traffics
@@ -337,7 +394,8 @@ def apply_iptables_rules():
 
     # Allow Tor process output
     exec_command(
-        f"iptables -A OUTPUT -m owner --uid-owner {TOR_UID} -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j ACCEPT")
+        f"iptables -A OUTPUT -m owner --uid-owner {TOR_UID} -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j ACCEPT"
+    )
 
     # Allow loopback output
     exec_command("/usr/sbin/iptables -A OUTPUT -d 127.0.0.1/32 -o lo -j ACCEPT")
@@ -346,7 +404,8 @@ def apply_iptables_rules():
 
     # Tor transproxy magic
     exec_command(
-        f'/usr/sbin/iptables -A OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport "{TOR_PORT}" --tcp-flags FIN,SYN,RST,ACK SYN -j ACCEPT')
+        f'/usr/sbin/iptables -A OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport "{TOR_PORT}" --tcp-flags FIN,SYN,RST,ACK SYN -j ACCEPT'
+    )
 
     # Allow OUTPUT to lan hosts in $_non_tor
     # Uncomment these 5 lines to enable.
@@ -383,8 +442,12 @@ def apply_sysctl_rules():
     exec_command('/sbin/sysctl -w net.ipv4.tcp_window_scaling=1 > "/dev/null"')
 
     # increase linux autotuning tcp buffer limits
-    exec_command('/sbin/sysctl -w net.ipv4.tcp_rmem="8192 87380 16777216" > "/dev/null"')
-    exec_command('/sbin/sysctl -w net.ipv4.tcp_wmem="8192 65536 16777216" > "/dev/null"')
+    exec_command(
+        '/sbin/sysctl -w net.ipv4.tcp_rmem="8192 87380 16777216" > "/dev/null"'
+    )
+    exec_command(
+        '/sbin/sysctl -w net.ipv4.tcp_wmem="8192 65536 16777216" > "/dev/null"'
+    )
 
     # increase TCP max buffer size
     exec_command('/sbin/sysctl -w net.core.rmem_max=16777216 > "/dev/null"')
@@ -474,11 +537,17 @@ def apply_sysctl_rules():
 
     # Disable ICMP redirecting
     exec_command('/sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0 > "/dev/null"')
-    exec_command('/sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0 > "/dev/null"')
+    exec_command(
+        '/sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0 > "/dev/null"'
+    )
     exec_command('/sbin/sysctl -w net.ipv4.conf.all.secure_redirects=0 > "/dev/null"')
-    exec_command('/sbin/sysctl -w net.ipv4.conf.default.secure_redirects=0 > "/dev/null"')
+    exec_command(
+        '/sbin/sysctl -w net.ipv4.conf.default.secure_redirects=0 > "/dev/null"'
+    )
     exec_command('/sbin/sysctl -w net.ipv6.conf.all.accept_redirects=0 > "/dev/null"')
-    exec_command('/sbin/sysctl -w net.ipv6.conf.default.accept_redirects=0 > "/dev/null"')
+    exec_command(
+        '/sbin/sysctl -w net.ipv6.conf.default.accept_redirects=0 > "/dev/null"'
+    )
     exec_command('/sbin/sysctl -w net.ipv4.conf.all.send_redirects=0 > "/dev/null"')
     exec_command('/sbin/sysctl -w net.ipv4.conf.default.send_redirects=0 > "/dev/null"')
 
@@ -505,7 +574,9 @@ class Anonymous:
         else:
             MSG("Start Anonymous Mode")
 
-            cmd = input(f"{yellow('Do you want kill dangerous applications? ')} ").lower()
+            cmd = input(
+                f"{yellow('Do you want kill dangerous applications? ')} "
+            ).lower()
             if cmd == "y" or cmd == "":
                 # killing dangerous applications
                 safekill()
@@ -516,9 +587,12 @@ class Anonymous:
             # backup torrc
             backup_torrc()
 
-            if is_i2pstarted() == 0:
-                # backup resolve.conf
-                backup_resolv_conf()
+            # if is_i2pstarted() == 0:
+            #     # backup resolve.conf
+            #     backup_resolv_conf()
+
+            # backup resolve.conf
+            backup_resolv_conf()
 
             # backup iptables rules
             backup_iptables()
@@ -532,9 +606,12 @@ class Anonymous:
             # generate new torrc
             gen_torrc()
 
-            if is_i2pstarted() == 0:
-                # generate new resolv.conf
-                gen_resolv_conf()
+            # if is_i2pstarted() == 0:
+            #     # generate new resolv.conf
+            #     gen_resolv_conf()
+
+            # generate new resolv.conf
+            gen_resolv_conf()
 
             # start tor service
             start_service("tor")
@@ -552,11 +629,12 @@ class Anonymous:
             wipe()
 
             # check tor
-            exec_command("xdg-open 'https://check.torproject.org/?lang=en' > /dev/null 2>&1")
+            exec_command(
+                "xdg-open 'https://check.torproject.org/?lang=en' > /dev/null 2>&1"
+            )
 
             exec_command(f"touch {BACKUPDIR}/started")
             MSG("Anonymous Mode Started")
-
 
     def Stop():
         clear()
@@ -569,7 +647,9 @@ class Anonymous:
         else:
             MSG("Stop Anonymous Mode")
 
-            cmd = input(f"{yellow('Do you want kill dangerous applications? ')} ").lower()
+            cmd = input(
+                f"{yellow('Do you want kill dangerous applications? ')} "
+            ).lower()
             if cmd == "y" or cmd == "":
                 # killing dangerous applications
                 safekill()
@@ -581,8 +661,12 @@ class Anonymous:
             restore_sysctl()
 
             # re-enable ipv6
-            exec_command("/sbin/sysctl -w net.ipv6.conf.all.disable_ipv6=0 > /dev/null 2>&1")
-            exec_command("/sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=0 > /dev/null 2>&1")
+            exec_command(
+                "/sbin/sysctl -w net.ipv6.conf.all.disable_ipv6=0 > /dev/null 2>&1"
+            )
+            exec_command(
+                "/sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=0 > /dev/null 2>&1"
+            )
 
             # flush iptables rules
             flush_iptables()
@@ -597,16 +681,18 @@ class Anonymous:
             restore_torrc()
 
             # check i2p stopped
-            if is_i2pstarted() == 0:
-                # restore resolv.conf
-                restore_resolv_conf()
+            # if is_i2pstarted() == 0:
+            #     # restore resolv.conf
+            #     restore_resolv_conf()
+
+            # restore resolv.conf
+            restore_resolv_conf()
 
             # stop browser anonymization
             stop_browser_anonymization()
 
             # wipe & clear logs
             wipe()
-
 
             exec_command("killall tor > /dev/null 2>&1")
 
@@ -616,7 +702,9 @@ class Anonymous:
     def Status():
         # check if started
         if is_started() == 1:
-            exec_command("xterm -geometry 140x40 -e nyx &")
+            exec_command(
+                "xterm -geometry 140x40 -e nyx -c /usr/share/AnonGT/core/assets/nyx.txt &"
+            )
             clear()
             banner()
         else:
@@ -644,7 +732,6 @@ class Anonymous:
             sleep(1)
             start_service("tor")
             MSG("tor identity changed")
-
 
     def Change_Mac():
         clear()
@@ -679,46 +766,44 @@ class Anonymous:
 
         wipe()
 
+    # def StartI2P():
+    #     clear()
+    #     print(red(logo))
+    #
+    #     if is_i2pstarted() == 1:
+    #         ERROR("I2P Already Started")
+    #     else:
+    #         MSG("Start I2P Services")
+    #         check_backup_dir()
+    #         if is_started() == 0:
+    #             backup_resolv_conf()
+    #             gen_resolv_conf()
+    #         else:
+    #             stop_service("tor")
+    #         exec_command("sudo -u i2psvc i2prouter start > /dev/null 2>&1")
+    #         if is_started() == 1:
+    #             start_service("tor")
+    #         sleep(2)
+    #         exec_command("xdg-open 'http://127.0.0.1:7657/home' > /dev/null 2>&1")
+    #         MSG("I2P Services Started")
+    #
+    #         exec_command(f"touch {BACKUPDIR}/i2pstarted")
 
-    def StartI2P():
-        clear()
-        print(red(logo))
-
-        if is_i2pstarted() == 1:
-            ERROR("I2P Already Started")
-        else:
-            MSG("Start I2P Services")
-            check_backup_dir()
-            if is_started() == 0:
-                backup_resolv_conf()
-                gen_resolv_conf()
-            else:
-                stop_service("tor")
-            exec_command("sudo -u i2psvc i2prouter start > /dev/null 2>&1")
-            if is_started() == 1:
-                start_service("tor")
-            sleep(2)
-            exec_command("xdg-open 'http://127.0.0.1:7657/home' > /dev/null 2>&1")
-            MSG("I2P Services Started")
-
-            exec_command(f"touch {BACKUPDIR}/i2pstarted")
-
-    def StopI2P():
-        clear()
-        print(red(logo))
-
-        if is_i2pstarted() == 0:
-            ERROR("I2P Already Stopped")
-        else:
-            MSG("Stop I2P Services")
-            check_backup_dir()
-            exec_command("sudo -u i2psvc i2prouter stop > /dev/null 2>&1")
-            if is_started() == 0:
-                restore_resolv_conf()
-            MSG("I2P Services Stopped")
-
-            exec_command(f"rm {BACKUPDIR}/i2pstarted")
-
+    # def StopI2P():
+    #     clear()
+    #     print(red(logo))
+    #
+    #     if is_i2pstarted() == 0:
+    #         ERROR("I2P Already Stopped")
+    #     else:
+    #         MSG("Stop I2P Services")
+    #         check_backup_dir()
+    #         exec_command("sudo -u i2psvc i2prouter stop > /dev/null 2>&1")
+    #         if is_started() == 0:
+    #             restore_resolv_conf()
+    #         MSG("I2P Services Stopped")
+    #
+    #         exec_command(f"rm {BACKUPDIR}/i2pstarted")
 
     def CheckUpdate():
         clear()
@@ -726,10 +811,8 @@ class Anonymous:
 
         check_update()
 
-
     def About():
         clear()
         print(red(logo))
 
         about()
-

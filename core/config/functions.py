@@ -3,19 +3,23 @@ from core.assets.alerts import *
 from core.config.config import BACKUPDIR
 from core.config.config import VERSION
 
+
 # check root
 def check_root():
     if getuid() != 0:
         ERROR("This script must be run as root")
         exit(1)
 
+
 # execute command
 def exec_command(cmd):
     system(cmd)
 
+
 # clear terminal
 def clear():
     system("clear")
+
 
 # get terminal output
 def get_process(cmd):
@@ -26,6 +30,7 @@ def get_process(cmd):
         result = tempf.read().decode("utf-8").strip()
         return result
 
+
 # check if started
 def is_started():
     if path.isfile(f"{BACKUPDIR}/started"):
@@ -35,14 +40,16 @@ def is_started():
         # Not Started
         return 0
 
+
 # check if I2P started
-def is_i2pstarted():
-    if path.isfile(f"{BACKUPDIR}/i2pstarted"):
-        # Started
-        return 1
-    else:
-        # Stopped
-        return 0
+# def is_i2pstarted():
+#     if path.isfile(f"{BACKUPDIR}/i2pstarted"):
+#         # Started
+#         return 1
+#     else:
+#         # Stopped
+#         return 0
+
 
 # get anongt is-started
 def anongt_isactive():
@@ -50,7 +57,7 @@ def anongt_isactive():
         return f"{red('AnonGT:')} {green('started')}"
 
     else:
-        return f"{red('Anongt:')}  {yellow('stopped')}"
+        return f"{red('AnonGT:')}  {yellow('stopped')}"
 
 
 # get tor service is-active
@@ -71,7 +78,10 @@ def check_update():
     MSG("Checking Update...")
 
     try:
-        result = get("https://raw.githubusercontent.com/gt0day/AnonGT/main/version.txt", verify=True).content
+        result = get(
+            "https://raw.githubusercontent.com/gt0day/AnonGT/main/version.txt",
+            verify=True,
+        ).content
         v = result.decode("utf-8").strip("\n")
 
         if v != VERSION:
@@ -80,6 +90,9 @@ def check_update():
             INFO("Go to https://github.com/gt0day/AnonGT")
         else:
             MSG("AnonGT Latest Version.")
+
+    except Exception as e:
+        ERROR(e)
     except:
         ERROR("Please Check Your Internet Connection")
 
@@ -90,4 +103,4 @@ def listToString(s):
     str1 = " "
 
     # return string
-    return (str1.join(s))
+    return str1.join(s)

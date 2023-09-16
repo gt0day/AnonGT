@@ -1,5 +1,5 @@
 # Anongt Version
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 # exclude locals
 TOR_EXCLUDE = "192.168.0.0/16 172.16.0.0/12 10.0.0.0/8"

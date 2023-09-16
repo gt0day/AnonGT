@@ -1,5 +1,5 @@
 from core.config.functions import clear
-from core.assets.colors import red,green
+from core.assets.colors import red, green
 from core.config.config import VERSION
 
 
@@ -15,12 +15,9 @@ def about():
         {green("clear configs & logs")}                                                      
         {green("firefox browser anonymization")}      
         {green("Changing Mac Address")}   
-        {green("I2P Services")}                                    
-
 
         {red("[Telegram]")}                                                                
         {green("https://t.me/gt0day")}                                                                                                   
-
         {red("[Youtube]")}                                                                 
         {green("https://youtube.com/@GT0day")}                                               
 

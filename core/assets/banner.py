@@ -1,7 +1,6 @@
 from core.config.config import VERSION
-from core.assets.colors import red,green,blue
+from core.assets.colors import red, green, blue
 from core.config.functions import anongt_isactive, tor_isacttive
-
 
 logo = f"""
                         ..::::::-::::..                           
@@ -47,21 +46,21 @@ def banner():
                 {anongt_isactive()}   {tor_isacttive()}
     {green('''         
     Let's To Be Anonymous Ghost!
-    Commands:
-        start    - Anonymous Mode Start 
-        stop     - Anonymous Mode Stop
-        status   - Watch Tor Traffic
-        myinfo   - Get Your Information
-        chngid   - Change Tor Identity
-        chngmac  - Change MAC Addresses Of All Interfaces
-        rvmac    - Revert MAC Addresses Of All Interfaces
-        wipe     - Memory Wipe & Clear Logs
-        ----[ I2P Related Features ]----
-        starti2p - Start I2P Services
-        stopi2p  - Stop  I2P Services
-        --------------------------------
-        checku   - Check Update
-        about    - About US
+    Usage: anongt <options>
+    ---------------------------------------------------------
+    |    Options  | Descriptions                            |
+    ---------------------------------------------------------
+    |    start    | Anonymous Mode Start                    |
+    |    stop     | Anonymous Mode Stop                     |
+    |    status   | Watch Tor Traffic                       |
+    |    myinfo   | Get Your Information                    |
+    |    chngid   | Change Tor Identity                     |
+    |    chngmac  | Change MAC Addresses Of All Interfaces  |
+    |    rvmac    | Revert MAC Addresses Of All Interfaces  |
+    |    wipe     | Memory Wipe & Clear Logs                |
+    |    checku   | Check Update                            |
+    |    about    | About US                                |
+    ---------------------------------------------------------
     ''')}
     """
 
