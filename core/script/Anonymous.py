@@ -32,13 +32,20 @@ def start_service(s):
     cmd = ["systemctl", "is-active", s]
     service = get_process(cmd)
     if service != "active":
-        WARN(s + " is not active")
-        exec_command(f"systemctl start {s}")
-        MSG(f"started {s} service")
+        _extracted_from_start_service_5(
+            s, " is not active", 'systemctl start ', 'started '
+        )
     else:
-        WARN(f"{s} is active")
-        exec_command(f"systemctl reload {s}")
-        MSG(f"reloaded {s} service")
+        _extracted_from_start_service_5(
+            s, ' is active', 'systemctl reload ', 'reloaded '
+        )
+
+
+# TODO Rename this here and in `start_service`
+def _extracted_from_start_service_5(s, arg1, arg2, arg3):
+    WARN(f"{s}{arg1}")
+    exec_command(f"{arg2}{s}")
+    MSG(f"{arg3}{s} service")
 
 
 # stop tor service
@@ -46,7 +53,7 @@ def stop_service(s):
     cmd = ["systemctl", "is-active", s]
     service = get_process(cmd)
     if service == "active":
-        WARN(s + " is active")
+        WARN(f"{s} is active")
         exec_command(f"systemctl stop {s}")
         MSG(f"stopped {s} service")
     else:
@@ -197,7 +204,7 @@ def get_info():
     Hosting: {hosting}
     """
         print(green(info))
-    except:
+    except Exception:
         ERROR("Remote #IP: unknown")
 
 
@@ -231,7 +238,7 @@ def backup_sysctl():
 
 # restore torrc
 def restore_torrc():
-    if path.isfile(BACKUPDIR + "/torrc.bak"):
+    if path.isfile(f"{BACKUPDIR}/torrc.bak"):
         exec_command("rm -f /etc/tor/torrc")
         exec_command(f"mv {BACKUPDIR}/torrc.bak /etc/tor/torrc")
         MSG("restored tor config")
@@ -239,7 +246,7 @@ def restore_torrc():
 
 # restore resolv config
 def restore_resolv_conf():
-    if path.isfile(BACKUPDIR + "/resolv.conf.bak"):
+    if path.isfile(f"{BACKUPDIR}/resolv.conf.bak"):
         exec_command(f"rm -f {BACKUPDIR}/resolv.conf")
         exec_command(f"mv {BACKUPDIR}/resolv.conf.bak /etc/resolv.conf")
         MSG("restored nameservers")
@@ -247,7 +254,7 @@ def restore_resolv_conf():
 
 # restoring iptables rules
 def restore_iptables():
-    if path.isfile(BACKUPDIR + "/iptables.rules.bak"):
+    if path.isfile(f"{BACKUPDIR}/iptables.rules.bak"):
         exec_command(f"iptables-restore < {BACKUPDIR}/iptables.rules.bak")
         exec_command(f"rm -f {BACKUPDIR}/iptables.rules.bak")
         MSG("restored iptables rules")
@@ -255,7 +262,7 @@ def restore_iptables():
 
 # restore sysctl rules
 def restore_sysctl():
-    if path.isfile(BACKUPDIR + "/sysctl.conf.bak"):
+    if path.isfile(f"{BACKUPDIR}/sysctl.conf.bak"):
         exec_command(f"sysctl -p {BACKUPDIR}/sysctl.conf.bak > /dev/null 2>&1")
         exec_command(f"rm -f {BACKUPDIR}/sysctl.conf.bak")
         MSG("restored sysctl rules")
@@ -367,17 +374,12 @@ def apply_iptables_rules():
         f"/usr/sbin/iptables -t nat -A OUTPUT -p icmp -j REDIRECT --to-ports {TOR_PORT}"
     )
 
-    # accept already established connections
-    exec_command(
-        "/usr/sbin/iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+    _extracted_from_apply_iptables_rules_47(
+        "/usr/sbin/iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT",
+        '/usr/sbin/iptables -A OUTPUT -m owner --uid-owner ',
+        ' -j ACCEPT',
+        "/usr/sbin/iptables -A OUTPUT -j REJECT",
     )
-
-    # allow only tor output
-    exec_command(
-        f"/usr/sbin/iptables -A OUTPUT -m owner --uid-owner {TOR_UID} -j ACCEPT"
-    )
-    exec_command("/usr/sbin/iptables -A OUTPUT -j REJECT")
-
     # TESTING block all incoming traffics
     # https://trac.torproject.org/projects/tor/wiki/doc/TransparentProxy
     exec_command("/usr/sbin/iptables -A INPUT -m state --state ESTABLISHED -j ACCEPT")
@@ -390,15 +392,12 @@ def apply_iptables_rules():
 
     # *filter OUTPUT
     exec_command("/usr/sbin/iptables -A OUTPUT -m state --state INVALID -j DROP")
-    exec_command("/usr/sbin/iptables -A OUTPUT -m state --state ESTABLISHED -j ACCEPT")
-
-    # Allow Tor process output
-    exec_command(
-        f"iptables -A OUTPUT -m owner --uid-owner {TOR_UID} -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j ACCEPT"
+    _extracted_from_apply_iptables_rules_47(
+        "/usr/sbin/iptables -A OUTPUT -m state --state ESTABLISHED -j ACCEPT",
+        'iptables -A OUTPUT -m owner --uid-owner ',
+        ' -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j ACCEPT',
+        "/usr/sbin/iptables -A OUTPUT -d 127.0.0.1/32 -o lo -j ACCEPT",
     )
-
-    # Allow loopback output
-    exec_command("/usr/sbin/iptables -A OUTPUT -d 127.0.0.1/32 -o lo -j ACCEPT")
     # iptables 1.8.5 can't use -o with input
     # exec_command("/usr/sbin/iptables -A INPUT -d 127.0.0.1/32 -o lo -j ACCEPT")
 
@@ -431,6 +430,16 @@ def apply_iptables_rules():
     # exec_command("/usr/sbin/ip6tables -P OUTPUT DROP")
 
     MSG("applied iptables rules")
+
+
+# TODO Rename this here and in `apply_iptables_rules`
+def _extracted_from_apply_iptables_rules_47(arg0, arg1, arg2, arg3):
+    # accept already established connections
+    exec_command(arg0)
+
+    # allow only tor output
+    exec_command(f"{arg1}{TOR_UID}{arg2}")
+    exec_command(arg3)
 
 
 # applying sysctl rules
