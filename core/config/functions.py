@@ -27,18 +27,12 @@ def get_process(cmd):
         proc = subprocess.Popen(cmd, stdout=tempf)
         proc.wait()
         tempf.seek(0)
-        result = tempf.read().decode("utf-8").strip()
-        return result
+        return tempf.read().decode("utf-8").strip()
 
 
 # check if started
 def is_started():
-    if path.isfile(f"{BACKUPDIR}/started"):
-        # Started
-        return 1
-    else:
-        # Not Started
-        return 0
+    return 1 if path.isfile(f"{BACKUPDIR}/started") else 0
 
 
 # check if I2P started
@@ -93,7 +87,7 @@ def check_update():
 
     except Exception as e:
         ERROR(e)
-    except:
+    except Exception:
         ERROR("Please Check Your Internet Connection")
 
 
