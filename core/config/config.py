@@ -1,5 +1,5 @@
 # Anongt Version
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 # exclude locals
 TOR_EXCLUDE = "192.168.0.0/16 172.16.0.0/12 10.0.0.0/8"
@@ -12,6 +12,9 @@ TOR_PORT = "9040"
 
 # tor dns port
 TOR_DNS = "9053"
+
+# tor virtual address network
+VIRTUAL_ADDR = "10.192.0.0/10"
 
 # tor config files
 TORRC = "/etc/tor/torrc"

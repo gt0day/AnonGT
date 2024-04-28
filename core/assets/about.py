@@ -1,4 +1,3 @@
-from core.config.functions import clear
 from core.assets.colors import red, green
 from core.config.config import VERSION
 
@@ -15,6 +14,9 @@ def about():
         {green("clear configs & logs")}                                                      
         {green("firefox browser anonymization")}      
         {green("Changing Mac Address")}   
+        {green("Anti MITM")}
+        {green("Onion Generator Links")}
+        {green("Onion Links Checker")}
 
         {red("[Telegram]")}                                                                
         {green("https://t.me/gt0day")}    
@@ -24,9 +26,6 @@ def about():
 
         {red("[Github]")}                                                                  
         {green("https://github.com/gt0day")}                                                 
-
-        {red("[Blogger]")}
-        {green("https://gt0day.blogspot.com/")}
 
         {red("[ Dark Web Onion Links ]")}                                                 
         {green("https://github.com/gt0day/DarkWeb")}                                         

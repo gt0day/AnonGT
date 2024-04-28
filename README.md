@@ -1,6 +1,6 @@
 # AnonGT - Anonymous Ghost
 
-###### Redirect All Traffic Through Tor Network For Kali Linux v0.1.1
+###### Redirect All Traffic Through Tor Network For Kali Linux v0.1.2
 
 ___
 
@@ -16,6 +16,9 @@ ___
 > ### clear configs & logs
 > ### firefox browser anonymization
 > ### Changing Mac Address
+> ### Anti MITM
+> ### Onion Generator Links
+> ### Onion Links Checker
 
 ###### Please always check for updates
 
@@ -28,7 +31,10 @@ ___
 ## AnonGT Install
 
 ___
-> git clone https://github.com/gt0day/AnonGT && cd AnonGT && sudo bash install.sh && exit;
+> git clone https://github.com/gt0day/AnonGT && cd AnonGT && sudo python3 install.py;
+
+## Best Secure Start
+> Changing Mac + Start + Anti MITM ;)
 
 ## AnonGT Commands
 
@@ -42,13 +48,13 @@ ___
 
 > ### sudo anongt start
 
+### Anonymous Mode Start With Secure Tor Bridges
+
+> ### sudo anongt start+
+
 ### Anonymous Mode Stop
 
 > ### sudo anongt stop
-
-### Anonymous Mode Change Tor IP
-
-> ### sudo anongt chngid
 
 ### Watch Tor Traffic
 
@@ -58,6 +64,13 @@ ___
 
 > ### sudo anongt myinfo
 
+### Anonymous Mode Change Tor IP
+
+> ### sudo anongt chngid
+
+### Anti MITM
+> ### sudo anongt amitm
+
 ### Change Mac Address For All Interfaces
 
 > ### sudo anongt chngmac
@@ -66,14 +79,36 @@ ___
 
 > ### sudo anongt rvmac
 
+### Onion Links Generator
+> ### sudo anongt oniongen
+
+### Onion Links Checker
+
+> ### sudo anongt checko
+
 ### Clear Configs & Logs
 
 > ### sudo anongt wipe
 
+### AnonGT Check Update
+
+> ### sudo anongt checku
+
+### AnonGT About
+
+> ### sudo anongt about
+
+## Change Tor Bridge Dir
+> ### https://gitlab.torproject.org/tpo/anti-censorship/team/-/wikis/Default-Bridges
+> ### /etc/tor/torrc
+
+## Change Exclude Locals
+> ### /usr/share/AnonGT/core/config/config.py
+
 ## Tested On
 
 ___ 
-> ### Kali Linux 2023.3
+> ### Kali Linux 2024.1
 
 ## Uninstall
 
