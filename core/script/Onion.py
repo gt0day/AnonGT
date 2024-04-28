@@ -111,17 +111,17 @@ class ONION:
 
                         # Append Onion Links
                         f = open(f"onions-{site_regex}-{site_count}", "a")
-                        f.write(onion + "\n")
+                        f.write(f"http://{onion}\n")
                         f.close()
 
                         # Print
                         # print(f"\r {green(onion)}")
                         try:
-                            data = get(onion)
+                            data = get(f"http://{onion}")
                         except:
                             data = 'error'
                         if data != 'error':
-                            url = green(onion)
+                            url = green(f"http://{onion}")
                             status = green('Active')
                             status_code = green(data.status_code)
                             soup = BeautifulSoup(data.text, 'html.parser')
@@ -129,7 +129,7 @@ class ONION:
                             page_title = page_title.replace('<title>', '')
                             page_title = page_title.replace('</title>', '')
                         elif data == 'error':
-                            url = red(onion)
+                            url = red(f"http://{onion}")
                             status = red("Inactive")
                             status_code = red('NA')
                             page_title = red('NA')
