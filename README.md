@@ -113,5 +113,5 @@ ___
 ## Uninstall
 
 ___
-> ### sudo rm -r /usr/share/anongt /usr/bin/anongt /var/lib/anongt;
+> ### sudo rm -r /usr/share/AnonGT /usr/bin/anongt /var/lib/anongt;
 
