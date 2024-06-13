@@ -8,15 +8,20 @@ def about():
         {red("VERSION:")} {green(VERSION)}
         
         {red("DESCRIPTION")}                                                               
-        {green("Script to redirect all traffic through tor network including")}              
-        {green("dns queries for anonymizing entire system")}                                 
-        {green("killing dangerous applications")}                                            
-        {green("clear configs & logs")}                                                      
-        {green("firefox browser anonymization")}      
-        {green("Changing Mac Address")}   
+        {green("Script to Redirect ALL Traffic Through TOR Network Including")}              
+        {green("DNS Queries For Anonymizing Entire System")}                                 
+        {green("Killing Dangerous Applications")}                                            
+        {green("Clear Configs & Logs")}                                                      
+        {green("Firefox Browser Anonymization")}
+        {green("Timezone Changer")}      
+        {green("Mac Address Changer")}   
+        {green("Change #IP Automatically")}
         {green("Anti MITM")}
-        {green("Onion Generator Links")}
+        {green("Onion Links Generator")}
         {green("Onion Links Checker")}
+        {green("Share/Receive Files Anonymously")}
+        {green("Anonymous Chat On Tor Network")}
+        {green("Host Your Website On Dark Web!")}
 
         {red("[Telegram]")}                                                                
         {green("https://t.me/gt0day")}    
