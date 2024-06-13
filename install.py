@@ -18,7 +18,7 @@ if path.exists(path3):
     system(f"sudo rm -r {path3}")
 
 system("sudo apt update")
-system("sudo apt install -y tor iptables obfs4proxy bleachbit nyx xterm secure-delete python3 python3-pip firefox-esr")
+system("sudo apt install -y tor iptables network-manager obfs4proxy bleachbit nyx xterm onionshare-cli firefox-esr torbrowser-launcher onionshare secure-delete python3 python3-pip")
 system("sudo mv ../AnonGT /usr/share/AnonGT")
 system("sudo touch anongt /usr/bin")
 system("sudo echo 'python3 /usr/share/AnonGT/AnonGT.py $1' > /usr/bin/anongt")
@@ -27,7 +27,7 @@ system("sudo chmod +x /usr/bin/anongt")
 chdir(f"/home/{getlogin()}/Desktop")
 system(f"cd /home/{getlogin()}/Desktop")
 
-system("sudo pip3 install netifaces termcolor")
+system("sudo pip3 install requests bs4 scapy netifaces termcolor")
 system("clear")
 print("--==[ AnonGT Installed Successfully ]==--")
 print("Type 'sudo anongt' to start.")

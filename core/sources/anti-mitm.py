@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-
-print("                     --==[ AnonGT Anti MITM Started ]==--")
-
-from scapy.all import Ether, ARP, srp, sniff, conf, os, subprocess
+from scapy.all import Ether, ARP, srp, sniff, os
 def get_mac(ip):
     p = Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(pdst=ip)
     result = srp(p, timeout=3, verbose=False)[0]

@@ -10,14 +10,14 @@ from core.config.config import (
     VIRTUAL_ADDR
 )
 from core.assets.alerts import *
-from core.assets.banner import logo, banner
+from core.assets.banner import logo
 from core.assets.about import about
 from core.config.functions import (
     exec_command,
     get_process,
     clear,
     is_started,
-    check_update,
+    check_update
 )
 
 
@@ -33,12 +33,10 @@ def start_service(s):
     cmd = ["systemctl", "is-active", s]
     service = get_process(cmd)
     if service != "active":
-        WARN(s + " is not active")
-        exec_command(f"systemctl start {s}")
+        exec_command(f"sudo systemctl start {s}")
         MSG(f"started {s} service")
     else:
-        WARN(f"{s} is active")
-        exec_command(f"systemctl reload {s}")
+        exec_command(f"sudo systemctl reload {s}")
         MSG(f"reloaded {s} service")
 
 
@@ -47,11 +45,10 @@ def stop_service(s):
     cmd = ["systemctl", "is-active", s]
     service = get_process(cmd)
     if service == "active":
-        WARN(s + " is active")
-        exec_command(f"systemctl stop {s}")
+        exec_command(f"sudo systemctl stop {s}")
         MSG(f"stopped {s} service")
     else:
-        WARN(f"{s} is not active")
+        pass
 
 
 def start_browser_anonymization():
@@ -84,7 +81,12 @@ def safekill():
         "killall -q dnsmasq nscd chrome dropbox skype icedove thunderbird firefox firefox-esr chromium xchat hexchat transmission steam firejail pidgin /usr/lib/firefox-esr/firefox-esr"
     )
 
-    # remove cache
+    # Deleting and overwriting unnecessary files...
+    exec_command(
+        "bleachbit -o -c bash.history system.cache system.clipboard system.custom system.recent_documents system.rotated_logs system.tmp system.trash adobe_reader.cache chromium.cache chromium.session chromium.history chromium.form_history elinks.history emesene.cache epiphany.cache firefox.cache firefox.crash_reports firefox.url_history firefox.forms flash.cache flash.cookies google_chrome.cache google_chrome.history google_chrome.form_history google_chrome.search_engines google_chrome.session google_earth.temporary_files links2.history opera.cache opera.form_history opera.history > /dev/null 2>&1"
+    )
+
+    # Deleting unnecessary files...
     exec_command(
         "bleachbit -c bash.history system.cache system.clipboard system.custom system.recent_documents system.rotated_logs system.tmp system.trash adobe_reader.cache chromium.cache chromium.session chromium.history chromium.form_history elinks.history emesene.cache epiphany.cache firefox.cache firefox.crash_reports firefox.url_history firefox.forms flash.cache flash.cookies google_chrome.cache google_chrome.history google_chrome.form_history google_chrome.search_engines google_chrome.session google_earth.temporary_files links2.history opera.cache opera.form_history opera.history > /dev/null 2>&1"
     )
@@ -114,10 +116,6 @@ def wipe():
     exec_command("echo 0 > /proc/sys/vm/oom_dump_tasks")
     # exec_command("sdmem -fllv > /dev/null 2>&1")
 
-    # release DHCP address
-    exec_command("dhclient -r > /dev/null 2>&1")
-    exec_command("rm -f /var/lib/dhcp/dhclient* > /dev/null 2>&1")
-
     # clear logs
     log_list = (
         "/var/log/messages",
@@ -140,69 +138,19 @@ def wipe():
         if path.isfile(log) == True or path.isdir(log) == True:
             exec_command(f"shred -vfzu {log} > /dev/null 2>&1")
 
+    # release DHCP address
+    exec_command("dhclient -r > /dev/null 2>&1")
+    exec_command("rm -f /var/lib/dhcp/dhclient* > /dev/null 2>&1")
+
     MSG("cleaned config & logs")
 
 
 # get ip
-def get_info():
+def getIP():
     try:
-        get_info = get(
-            "http://ip-api.com/json/?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query",
-            verify=True,
-        )
-
-        ip = get_info.json()["query"]
-        status = get_info.json()["status"]
-        continent = get_info.json()["continent"]
-        continentCode = get_info.json()["continentCode"]
-        country = get_info.json()["country"]
-        countryCode = get_info.json()["countryCode"]
-        region = get_info.json()["region"]
-        regionName = get_info.json()["regionName"]
-        city = get_info.json()["city"]
-        district = get_info.json()["district"]
-        zip = get_info.json()["zip"]
-        lat = get_info.json()["lat"]
-        lon = get_info.json()["lon"]
-        timezone = get_info.json()["timezone"]
-        offset = get_info.json()["offset"]
-        currency = get_info.json()["currency"]
-        isp = get_info.json()["isp"]
-        org = get_info.json()["org"]
-        AS = get_info.json()["as"]
-        asname = get_info.json()["asname"]
-        reverse = get_info.json()["reverse"]
-        mobile = get_info.json()["mobile"]
-        proxy = get_info.json()["proxy"]
-        hosting = get_info.json()["hosting"]
-
-        info = f"""
-    #IP: {ip}
-    Status: {status}
-    Continent: {continent}
-    ContinentCode: {continentCode}
-    Country: {country}
-    CountryCode: {countryCode}
-    Region: {region}
-    RegionName: {regionName}
-    City: {city}
-    District: {district}
-    ZIP: {zip}
-    LAT: {lat}
-    LON: {lon}
-    TimeZone: {timezone}
-    Offset: {offset}
-    Currency: {currency}
-    ISP: {isp}
-    ORG: {org}
-    AS: {AS}
-    ASName: {asname}
-    Reverse: {reverse}
-    Mobile: {mobile}
-    Proxy: {proxy}
-    Hosting: {hosting}
-    """
-        print(green(info))
+        d = str(urlopen('http://checkip.dyndns.com/').read())
+        IP = r.compile(r'Address: (\d+\.\d+\.\d+\.\d+)').search(d).group(1)
+        MSG(f"Remote #IP: {IP}")
     except:
         ERROR("Remote #IP: unknown")
 
@@ -278,10 +226,6 @@ nameserver 208.67.222.222
 nameserver 208.67.220.220
 nameserver 8.8.8.8
 nameserver 8.8.4.4
-nameserver 84.200.69.80
-nameserver 84.200.70.40
-nameserver 91.239.100.100
-nameserver 89.233.43.71
 """
     exec_command(f'cat > "/etc/resolv.conf" <<EOF {nameservers}')
     exec_command("chmod 644 /etc/resolv.conf")
@@ -294,26 +238,36 @@ def gen_torrc():
 # Generated By AnonGT
 User {TOR_UID}
 DataDirectory /var/lib/tor
+
+##define virtual network mask
 VirtualAddrNetwork {VIRTUAL_ADDR}
 AutomapHostsOnResolve 1
 AutomapHostsSuffixes .exit,.onion
+
 #define tor ports and explicitly declare some security flags
 TransPort 127.0.0.1:{TOR_PORT} IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
 SocksPort 127.0.0.1:9050 IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
-ControlPort 9051
+ControlPort 127.0.0.1:9051
+
 HashedControlPassword 16:5F620905DFFAC449600612AEE018C59D62198F8DFBD2B4C746E05376D7
+
 #use tor to resolve domain names
 DNSPort 127.0.0.1:{TOR_DNS}
+
 #daemonize
 RunAsDaemon 1
-# Sandbox 1 - tor package is not built with --enable-seccomp required to use this option.
+
+#use hardware accaleration when possible for crypto
 HardwareAccel 1
+
 #socket safety hacks
 TestSocks 1
 AllowNonRFC953Hostnames 0
-WARNPlaintextPorts 23,109,110,143,80
+WarnPlaintextPorts 23,109,110,143,80
+
 #dns safety hacks
 ClientRejectInternalAddresses 1
+
 #circuit hacks
 NewCircuitPeriod 40
 MaxCircuitDirtiness 600
@@ -332,37 +286,47 @@ def gen_bridges():
 # Generated By AnonGT
 User {TOR_UID}
 DataDirectory /var/lib/tor
+
+##define virtual network mask
 VirtualAddrNetwork {VIRTUAL_ADDR}
 AutomapHostsOnResolve 1
 AutomapHostsSuffixes .exit,.onion
+
 #define tor ports and explicitly declare some security flags
 TransPort 127.0.0.1:{TOR_PORT} IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
 SocksPort 127.0.0.1:9050 IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
-ControlPort 9051
+ControlPort 127.0.0.1:9051
+
 HashedControlPassword 16:5F620905DFFAC449600612AEE018C59D62198F8DFBD2B4C746E05376D7
+
 #use tor to resolve domain names
 DNSPort 127.0.0.1:{TOR_DNS}
+
 #daemonize
 RunAsDaemon 1
-# Sandbox 1 - tor package is not built with --enable-seccomp required to use this option.
+
+#use hardware accaleration when possible for crypto
 HardwareAccel 1
+
 #socket safety hacks
 TestSocks 1
 AllowNonRFC953Hostnames 0
-WARNPlaintextPorts 23,109,110,143,80
+WarnPlaintextPorts 23,109,110,143,80
+
 #dns safety hacks
 ClientRejectInternalAddresses 1
+
 #circuit hacks
 NewCircuitPeriod 40
 MaxCircuitDirtiness 600
 MaxClientCircuitsPending 48
 UseEntryGuards 1
 EnforceDistinctSubnets 1
+
 # Enable bridge mode
 # https://gitlab.torproject.org/tpo/anti-censorship/team/-/wikis/Default-Bridges
 UseBridges 1
 ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy managed
-
 
 Bridge obfs4 192.95.36.142:443 CDF2E852BF539B82BD10E27E9115A31734E378C2 cert=qUVQ0srL1JI/vO6V6m/24anYXiJD3QP2HgzUKQtQ7GRqqUvs7P+tG43RtAqdhLOALP7DJQ iat-mode=1
 Bridge obfs4 37.218.245.14:38224 D9A82D2F9C2F65A18407B1D2B764F130847F8B5D cert=bjRaMrr1BRiAW8IE9U5z27fQaYgOhX1UCmOpg2pFpoMvo6ZgQMzLsaTzzQNTlm7hNcb+Sg iat-mode=0
@@ -390,21 +354,18 @@ def apply_iptables_rules():
 
     # set iptables nat
     exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -m owner --uid-owner {TOR_UID} -j RETURN")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p tcp --dport 53 -j REDIRECT --to-ports {TOR_DNS}")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p udp -m owner --uid-owner {TOR_UID} -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -o lo -j RETURN")
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -d {VIRTUAL_ADDR} -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j REDIRECT --to-ports {TOR_PORT}")
 
     # set dns redirect
     exec_command(
         f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
     )
+
     exec_command(
         f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
     )
+
     exec_command(
-        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m owner --uid-owner {TOR_UID} -m udp --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
+        f"/usr/sbin/iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp -m owner --uid-owner {TOR_UID} --dport 53 -j REDIRECT --to-ports {TOR_DNS}"
     )
 
     # resolve .onion domains mapping 10.192.0.0/10 address space
@@ -423,9 +384,6 @@ def apply_iptables_rules():
     done
     """
     exec_command(cmd)
-
-    # Redirects all other pre-routing and output to Tor's TransPort
-    exec_command(f"/usr/sbin/iptables -t nat -A OUTPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j REDIRECT --to-ports {TOR_PORT}")
 
     # redirect all other output through tor
     exec_command(
@@ -633,18 +591,30 @@ def apply_sysctl_rules():
     MSG("applied sysctl rules")
 
 
+def change_timezone():
+    exec_command(f"timedatectl show | grep Timezone | sed 's/Timezone=//g' > {BACKUPDIR}/timezone.bak")
+    exec_command("sudo timedatectl set-timezone UTC &> /dev/null")
+    MSG("timezone changed")
+
+def revert_timezone():
+    f = open(f"{BACKUPDIR}/timezone.bak", "r")
+    exec_command(f"sudo timedatectl set-timezone {f.read().strip()}")
+    exec_command(f"sudo rm -fr {BACKUPDIR}/timezone.bak")
+    f.close()
+    MSG("timezone reverted")
 
 # Anonymous Mode CLass
 class Anonymous:
     def Start():
-        clear()
-        print(red(logo))
 
         # check if started
         if is_started() == 1:
             ERROR("Anonymous Mode is already started")
 
         else:
+            clear()
+            print(red(logo))
+
             MSG("Start Anonymous Mode")
 
             cmd = input(
@@ -657,12 +627,11 @@ class Anonymous:
             # check backup dir
             check_backup_dir()
 
+            # Change Timezone
+            change_timezone()
+
             # backup torrc
             backup_torrc()
-
-            # if is_i2pstarted() == 0:
-            #     # backup resolve.conf
-            #     backup_resolv_conf()
 
             # backup resolve.conf
             backup_resolv_conf()
@@ -678,10 +647,6 @@ class Anonymous:
 
             # generate new torrc
             gen_torrc()
-
-            # if is_i2pstarted() == 0:
-            #     # generate new resolv.conf
-            #     gen_resolv_conf()
 
             # generate new resolv.conf
             gen_resolv_conf()
@@ -705,25 +670,21 @@ class Anonymous:
             # wipe & clear logs
             wipe()
 
-            # check tor
-            # exec_command(
-            #     "xdg-open 'https://check.torproject.org/?lang=en' > /dev/null 2>&1"
-            # )
-
             exec_command(f"touch {BACKUPDIR}/started")
             MSG("Anonymous Mode Started")
             MSG("Go to 'https://check.torproject.org/'")
 
 
     def StartPlus():
-        clear()
-        print(red(logo))
 
         # check if started
         if is_started() == 1:
             ERROR("Anonymous Mode is already started")
 
         else:
+            clear()
+            print(red(logo))
+
             MSG("Start Anonymous Mode")
 
             cmd = input(
@@ -735,6 +696,9 @@ class Anonymous:
 
             # check backup dir
             check_backup_dir()
+
+            # Change Timezone
+            change_timezone()
 
             # backup torrc
             backup_torrc()
@@ -758,6 +722,9 @@ class Anonymous:
             gen_resolv_conf()
 
             # start tor service
+            exec_command("service network-manager force-reload > /dev/null 2>&1")
+            exec_command("killall dnsmasq > /dev/null 2>&1")
+            exec_command("killall nscd > /dev/null 2>&1")
             start_service("tor")
 
             # apply new iptables rules
@@ -777,14 +744,15 @@ class Anonymous:
             MSG("Go to 'https://check.torproject.org/'")
 
     def Stop():
-        clear()
-        print(red(logo))
 
         # check if stopped
         if is_started() == 0:
             ERROR("Anonymous Mode is already stopped")
 
         else:
+            clear()
+            print(red(logo))
+            
             MSG("Stop Anonymous Mode")
 
             cmd = input(
@@ -796,6 +764,9 @@ class Anonymous:
 
             # check backup dir
             check_backup_dir()
+
+            # Revert Timezone
+            revert_timezone()
 
             # restore sysctl rules
             restore_sysctl()
@@ -820,11 +791,6 @@ class Anonymous:
             # restore torrc
             restore_torrc()
 
-            # check i2p stopped
-            # if is_i2pstarted() == 0:
-            #     # restore resolv.conf
-            #     restore_resolv_conf()
-
             # restore resolv.conf
             restore_resolv_conf()
 
@@ -835,32 +801,23 @@ class Anonymous:
             wipe()
 
             exec_command("killall tor > /dev/null 2>&1")
-
             exec_command(f"rm -f {BACKUPDIR}/started")
-            MSG("Anonymous Mode Stoped")
+            MSG("Anonymous Mode Stopped")
 
     def Status():
         # check if started
         if is_started() == 1:
             exec_command(
-                "xterm -geometry 140x40 -e nyx &"
+                f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Status' -geometry 150x35 -e 'sudo nyx' &"
             )
-            clear()
-            banner()
         else:
-            clear()
-            print(red(logo))
-            ERROR("AnonGT is stopped")
+            ERROR("Please Start AnonGT.")
 
-    def MyInfo():
-        clear()
-        print(red(logo))
+    def MyIP():
 
-        get_info()
+        getIP()
 
     def Change_ID():
-        clear()
-        print(red(logo))
 
         # check if stopped
         if is_started() == 0:
@@ -899,60 +856,56 @@ class Anonymous:
         sleep(1)
         MSG("reverted mac addresses")
 
+    def Fix():
+
+        if path.exists(f"{BACKUPDIR}/started"):
+            # Revert Timezone
+            revert_timezone()
+
+            # restore sysctl rules
+            restore_sysctl()
+
+            # re-enable ipv6
+            exec_command(
+                "/sbin/sysctl -w net.ipv6.conf.all.disable_ipv6=0 > /dev/null 2>&1"
+            )
+            exec_command(
+                "/sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=0 > /dev/null 2>&1"
+            )
+            # flush iptables rules
+            flush_iptables()
+
+            # restore iptables rules
+            restore_iptables()
+
+            # restore torrc
+            restore_torrc()
+
+            # restore resolv.conf
+            restore_resolv_conf()
+
+            # stop browser anonymization
+            stop_browser_anonymization()
+
+            # wipe & clear logs
+            wipe()
+
+            exec_command("killall tor > /dev/null 2>&1")
+            exec_command(f"rm -f {BACKUPDIR}/started")
+
+            MSG("Fixed Completed.")
+        else:
+            MSG("Fixed Completed.")
+
+
     def Wipe():
-        clear()
-        print(red(logo))
 
         wipe()
+        clean_dhcp()
         exec_command("sdmem -fllv > /dev/null 2>&1")
 
-    # def StartI2P():
-    #     clear()
-    #     print(red(logo))
-    #
-    #     if is_i2pstarted() == 1:
-    #         ERROR("I2P Already Started")
-    #     else:
-    #         MSG("Start I2P Services")
-    #         check_backup_dir()
-    #         if is_started() == 0:
-    #             backup_resolv_conf()
-    #             gen_resolv_conf()
-    #         else:
-    #             stop_service("tor")
-    #         exec_command("sudo -u i2psvc i2prouter start > /dev/null 2>&1")
-    #         if is_started() == 1:
-    #             start_service("tor")
-    #         sleep(2)
-    #         exec_command("xdg-open 'http://127.0.0.1:7657/home' > /dev/null 2>&1")
-    #         MSG("I2P Services Started")
-    #
-    #         exec_command(f"touch {BACKUPDIR}/i2pstarted")
-
-    # def StopI2P():
-    #     clear()
-    #     print(red(logo))
-    #
-    #     if is_i2pstarted() == 0:
-    #         ERROR("I2P Already Stopped")
-    #     else:
-    #         MSG("Stop I2P Services")
-    #         check_backup_dir()
-    #         exec_command("sudo -u i2psvc i2prouter stop > /dev/null 2>&1")
-    #         if is_started() == 0:
-    #             restore_resolv_conf()
-    #         MSG("I2P Services Stopped")
-    #
-    #         exec_command(f"rm {BACKUPDIR}/i2pstarted")
-
     def CheckUpdate():
-        clear()
-        print(red(logo))
-
         check_update()
 
     def About():
-        clear()
-        print(red(logo))
-
         about()

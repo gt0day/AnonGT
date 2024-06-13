@@ -30,6 +30,16 @@ def get_process(cmd):
         result = tempf.read().decode("utf-8").strip()
         return result
 
+# get current user
+def get_user():
+    with tempfile.TemporaryFile() as tempf:
+        proc = subprocess.Popen("users", stdout=tempf)
+        proc.wait()
+        tempf.seek(0)
+        result = tempf.read().decode("utf-8").strip()
+        return result.split()[0]
+
+
 
 # check if started
 def is_started():

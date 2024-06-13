@@ -1,8 +1,6 @@
 from core.config.librareis import *
-from core.config.functions import is_started, clear
+from core.config.functions import is_started
 from core.assets.alerts import ERROR, red, green, yellow
-from core.assets.banner import logo
-
 class ONION:
 
     # https://github.com/tsierawski/oniongen-py/tree/main
@@ -43,120 +41,110 @@ class ONION:
 
         '''
 
-        # check if started
-        if is_started() == 1:
-            clear
-            print(red(logo))
+
+        site_count = input(f"{yellow('Enter number of addresses to find: ')}")
+        site_regex = input(f"{yellow('Enter pattern addresses should match: ')}")
+
+        # Eye candy
+        def printProgressBar(value, target, proc):
+            size = 10
+            progress = value / int(target)
+            sys.stdout.write('\r')
+            bar = '▒' * int(size * progress)
+            bar += ' ' * int(size * (1 - progress))
+            sys.stdout.write(f"{bar:{size}s} {int(100 * progress)}% {proc} addresses tested")
+            sys.stdout.flush()
 
 
-            site_count = input(f"{yellow('Enter number of addresses to find: ')}")
-            site_regex = input(f"{yellow('Enter pattern addresses should match: ')}")
+        # Time start
+        start_time = time.process_time()
 
-            # Eye candy
-            def printProgressBar(value, target, proc):
-                size = 10
-                progress = value / int(target)
-                sys.stdout.write('\r')
-                bar = '▒' * int(size * progress)
-                bar += ' ' * int(size * (1 - progress))
-                sys.stdout.write(f"{bar:{size}s} {int(100 * progress)}% {proc} addresses tested")
-                sys.stdout.flush()
+        # Stats
+        vanity_onions = 0
+        processed = 0
 
+        while (vanity_onions < int(site_count)):
 
-            # Time start
-            start_time = time.process_time()
+            # Generate key pair
+            priv_key = SigningKey.generate()
+            pub_key = priv_key.verify_key
 
-            # Stats
-            vanity_onions = 0
-            processed = 0
+            # Checksum
+            checksum = hashlib.sha3_256(b".onion checksum" + bytes(pub_key) + b"\x03")
 
-            while (vanity_onions < int(site_count)):
+            # Onion address
+            onion = (base64.b32encode(bytes(pub_key) + checksum.digest()[:2] + b'\x03')).decode(
+                "utf-8").lower() + ".onion"
 
-                # Generate key pair
-                priv_key = SigningKey.generate()
-                pub_key = priv_key.verify_key
+            # Check regular expression
+            if re.match(site_regex, onion):
 
-                # Checksum
-                checksum = hashlib.sha3_256(b".onion checksum" + bytes(pub_key) + b"\x03")
+                # Check for "onions" folder
+                if not path.exists("onions"):
+                    makedirs("onions")
 
-                # Onion address
-                onion = (base64.b32encode(bytes(pub_key) + checksum.digest()[:2] + b'\x03')).decode(
-                    "utf-8").lower() + ".onion"
+                # Check for vanity .onion
+                if not path.exists("onions/" + str(onion)):
+                    makedirs("onions/" + onion)
 
-                # Check regular expression
-                if re.match(site_regex, onion):
+                    # Save private key
+                    f = open("onions/" + onion + "/hs_ed25519_secret_key", "wb")
+                    f.write(b"== ed25519v1-secret: type0 ==\x00\x00\x00" + bytes(priv_key))
+                    f.close()
 
-                    # Check for "onions" folder
-                    if not path.exists("onions"):
-                        makedirs("onions")
+                    # Save public key
+                    f = open("onions/" + onion + "/hs_ed25519_public_key", "wb")
+                    f.write(b"== ed25519v1-public: type0 ==\x00\x00\x00" + bytes(pub_key))
+                    f.close()
 
-                    # Check for vanity .onion
-                    if not path.exists("onions/" + str(onion)):
-                        makedirs("onions/" + onion)
+                    # Save hostname
+                    f = open("onions/" + onion + "/hostname", "w+")
+                    f.write(onion)
+                    f.close()
 
-                        # Save private key
-                        f = open("onions/" + onion + "/hs_ed25519_secret_key", "wb")
-                        f.write(b"== ed25519v1-secret: type0 ==\x00\x00\x00" + bytes(priv_key))
-                        f.close()
+                    # Append Onion Links
+                    f = open(f"onions-{site_regex}-{site_count}", "a")
+                    f.write(f"http://{onion}\n")
+                    f.close()
 
-                        # Save public key
-                        f = open("onions/" + onion + "/hs_ed25519_public_key", "wb")
-                        f.write(b"== ed25519v1-public: type0 ==\x00\x00\x00" + bytes(pub_key))
-                        f.close()
+                    # Print Links
+                    print(f"\r {green('http://' + onion)}")
+                    # try:
+                    #     data = get(onion)
+                    # except:
+                    #     data = 'error'
+                    # if data != 'error':
+                    #     url = green(f"http://{onion}")
+                    #     status = green('Active')
+                    #     status_code = green(data.status_code)
+                    #     soup = BeautifulSoup(data.text, 'html.parser')
+                    #     page_title = green(str(soup.title))
+                    #     page_title = page_title.replace('<title>', '')
+                    #     page_title = page_title.replace('</title>', '')
+                    # elif data == 'error':
+                    #     url = red(f"http://{onion}")
+                    #     status = red("Inactive")
+                    #     status_code = red('NA')
+                    #     page_title = red('NA')
+                    # print("\n")
+                    # print(url, ': ', status, ': ', status_code, ': ', page_title)
+                    # print("\n")
 
-                        # Save hostname
-                        f = open("onions/" + onion + "/hostname", "w+")
-                        f.write(onion)
-                        f.close()
+                vanity_onions += 1
 
-                        # Append Onion Links
-                        f = open(f"onions-{site_regex}-{site_count}", "a")
-                        f.write(f"http://{onion}\n")
-                        f.close()
+            processed += 1
 
-                        # Print
-                        # print(f"\r {green(onion)}")
-                        try:
-                            data = get(f"http://{onion}")
-                        except:
-                            data = 'error'
-                        if data != 'error':
-                            url = green(f"http://{onion}")
-                            status = green('Active')
-                            status_code = green(data.status_code)
-                            soup = BeautifulSoup(data.text, 'html.parser')
-                            page_title = green(str(soup.title))
-                            page_title = page_title.replace('<title>', '')
-                            page_title = page_title.replace('</title>', '')
-                        elif data == 'error':
-                            url = red(f"http://{onion}")
-                            status = red("Inactive")
-                            status_code = red('NA')
-                            page_title = red('NA')
-                        print("\n")
-                        print(url, ': ', status, ': ', status_code, ': ', page_title)
-                        print("\n")
+            if (vanity_onions < int(site_count)):
+                # Print Eye Candy
+                printProgressBar(vanity_onions, site_count, processed)
 
-                    vanity_onions += 1
+        elapsed_time = time.process_time() - start_time
 
-                processed += 1
-
-                if (vanity_onions < int(site_count)):
-                    # Print Eye Candy
-                    printProgressBar(vanity_onions, site_count, processed)
-
-            elapsed_time = time.process_time() - start_time
-
-            print(green(f"{vanity_onions} matching entries from {processed} generated .onion URLs found in {elapsed_time}s"))
-
-        else:
-            ERROR("Please Start AnonGT.")
+        print(green(f"{vanity_onions} matching entries from {processed} generated .onion URLs found in {elapsed_time}s"))
 
     def check():
         # check if started
         if is_started() == 1:
-            clear
-            print(red(logo))
             in_file = input(green("Submit the URL File: "))
             if path.exists(in_file):
                 input_file = open(in_file, 'r')

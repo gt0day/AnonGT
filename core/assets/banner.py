@@ -54,17 +54,27 @@ def banner():
          stop     | Anonymous Mode Stop
                 -----
          status   | Watch Tor Traffic
-         myinfo   | Get Your Information
+         myip     | Get Your #IP Address
          chngid   | Change Tor Identity
-         amitm    | Anti MITM
+                -----
+         autochng | Change #IP Automatically
+         antimitm | Anti MITM
                 -----
          chngmac  | Change Mac Addresses Of All Interfaces
          rvmac    | Revert Mac Addresses Of All Interfaces
                 -----
          oniongen | Onion Links Generator
-         checko   | Onion Links Checker
+         checko   | Onion Links Checker    
+                -----
+           [ Onion Share ]
+                -----
+         share    | Anonymous Share Files
+         receive  | Anonymous Receive Files
+         chat     | Anonymous Chat
+         website  | Host A Website      
                 -----
          wipe     | Memory Wipe & Clear Logs
+         fix      | If Shutdown Without Stop
          checku   | Check Update
          about    | About US
     ---------------------------------------------------------
