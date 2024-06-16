@@ -54,7 +54,7 @@ def AnonGT():
         if is_started() == 0:
             ERROR("Anonymous Mode is already stopped")
         else:
-            exec_command(f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Auto #IP Changer' -geometry 150x35 -e 'sudo python3 /usr/share/AnonGT/core/sources/auto-change.py' &")
+            exec_command(f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Auto #IP Changer' -geometry 150x35 -e 'sudo python3 /usr/share/AnonGT/core/sources/auto-change.py' &")
     elif cmd == "antimitm":
         exec_command(f"sudo python3 /usr/share/AnonGT/core/sources/anti-mitm.py &")
         MSG("Anti MITM Started")
