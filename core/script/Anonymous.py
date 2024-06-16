@@ -100,6 +100,7 @@ def flush_iptables():
     exec_command("/usr/sbin/iptables -X")
     exec_command("/usr/sbin/iptables -t nat -F")
     exec_command("/usr/sbin/iptables -t nat -X")
+    exec_command("/usr/sbin/iptables -t mangle -F")
     exec_command("/usr/sbin/iptables -P INPUT ACCEPT")
     exec_command("/usr/sbin/iptables -P FORWARD ACCEPT")
     exec_command("/usr/sbin/iptables -P OUTPUT ACCEPT")
@@ -263,6 +264,7 @@ HardwareAccel 1
 #socket safety hacks
 TestSocks 1
 AllowNonRFC953Hostnames 0
+AllowDotExit 0
 WarnPlaintextPorts 23,109,110,143,80
 
 #dns safety hacks
@@ -273,7 +275,13 @@ NewCircuitPeriod 40
 MaxCircuitDirtiness 600
 MaxClientCircuitsPending 48
 UseEntryGuards 1
+UseEntryGuardsAsDirGuards 1
 EnforceDistinctSubnets 1
+
+TrackHostExits .facebook.com,.facebook.net,.twitter.com,.fbcdn.com,.fbcdn.net,.akamaihd.com,.google.com,.google.it,.google.fr,.google.de,.google.br,.yandex.ru,.yandex.com,.gmail.com,.googleapis.com,.gstatic.com,.adform.net,.google-analitics.com,.googletagservices.com
+ExcludeNodes {US},{FR},{UK},{GB}
+ExitNodes 217.115.10.132,217.115.10.131,{kp},{af},{dz},{cu},{gm},{ht},{is},{mr},{ng},{ru},{vn},{so}
+StrictNodes 1
 """
 
     exec_command(f'cat > "{TORRC}" <<EOF {torconfig}')
@@ -311,6 +319,7 @@ HardwareAccel 1
 #socket safety hacks
 TestSocks 1
 AllowNonRFC953Hostnames 0
+AllowDotExit 0
 WarnPlaintextPorts 23,109,110,143,80
 
 #dns safety hacks
@@ -321,7 +330,13 @@ NewCircuitPeriod 40
 MaxCircuitDirtiness 600
 MaxClientCircuitsPending 48
 UseEntryGuards 1
+UseEntryGuardsAsDirGuards 1
 EnforceDistinctSubnets 1
+
+TrackHostExits .facebook.com,.facebook.net,.twitter.com,.fbcdn.com,.fbcdn.net,.akamaihd.com,.google.com,.google.it,.google.fr,.google.de,.google.br,.yandex.ru,.yandex.com,.gmail.com,.googleapis.com,.gstatic.com,.adform.net,.google-analitics.com,.googletagservices.com
+ExcludeNodes {US},{FR},{UK},{GB}
+ExitNodes 217.115.10.132,217.115.10.131,{kp},{af},{dz},{cu},{gm},{ht},{is},{mr},{ng},{ru},{vn},{so}
+StrictNodes 1
 
 # Enable bridge mode
 # https://gitlab.torproject.org/tpo/anti-censorship/team/-/wikis/Default-Bridges
@@ -627,6 +642,11 @@ class Anonymous:
             # check backup dir
             check_backup_dir()
 
+            exec_command("sudo service resolvconf stop")
+            MSG("resolvconf stopped")
+            exec_command("sudo killall dnsmasq")
+            MSG("dnsmasq stopped")
+
             # Change Timezone
             change_timezone()
 
@@ -696,6 +716,11 @@ class Anonymous:
 
             # check backup dir
             check_backup_dir()
+            
+            exec_command("sudo service resolvconf stop")
+            MSG("resolvconf stopped")
+            exec_command("sudo killall dnsmasq")
+            MSG("dnsmasq stopped")
 
             # Change Timezone
             change_timezone()
@@ -801,6 +826,10 @@ class Anonymous:
             wipe()
 
             exec_command("killall tor > /dev/null 2>&1")
+            exec_command("sudo service resolvconf start  > /dev/null 2>&1")
+            MSG("resolvconf started")
+            exec_command("sudo service dnsmasq start  > /dev/null 2>&1")
+            MSG("dnsmasq started")
             exec_command(f"rm -f {BACKUPDIR}/started")
             MSG("Anonymous Mode Stopped")
 
