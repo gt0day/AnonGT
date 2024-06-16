@@ -12,18 +12,23 @@ from core.script.OnionShare import OnionShare
 # AnonGT - redirect all traffic through tor network                            #
 #                                                                              #
 # DESCRIPTION                                                                  #
-# Script to redirect all traffic through tor network including                 #
-# dns queries for anonymizing entire system                                    #
-# killing dangerous applications                                               #
-# clear configs & logs                                                         #
-# firefox browser anonymization                                                #
-# Changing Mac Address                                                         #
+# Script to Redirect ALL Traffic Through TOR Network Including                 #
+# DNS Queries For Anonymizing Entire System                                    #
+# Killing Dangerous Applications                                               #
+# Clear Configs & Logs                                                         #
+# Firefox Browser Anonymization                                                #
+# Timezone Changer                                                             #
+# Mac Address Changer                                                          #
+# Change #IP Automatically                                                     #
 # Anti MITM                                                                    #
-# Onion Generator Links                                                        #
+# Onion Links Generator                                                        #
 # Onion Links Checker                                                          #
+# Share/Receive Files Anonymously                                              #
+# Anonymous Chat On Tor Network                                                #
+# Host Your Website On Dark Web!                                               #
 #                                                                              #
 # AUTHORS                                                                      #
-# https://t.me/gtsec                                                           #
+# https://t.me/GTSec                                                           #
 #                                                                              #
 ################################################################################
 
