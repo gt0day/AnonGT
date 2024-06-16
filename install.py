@@ -18,7 +18,7 @@ if path.exists(path3):
     system(f"sudo rm -r {path3}")
 
 system("sudo apt update")
-system("sudo apt install -y tor iptables network-manager obfs4proxy dnsmasq resolvconf bleachbit nyx xterm onionshare-cli firefox-esr torbrowser-launcher onionshare secure-delete python3 python3-pip")
+system("sudo apt install -y tor iptables network-manager obfs4proxy bleachbit nyx xterm onionshare-cli firefox-esr torbrowser-launcher onionshare secure-delete python3 python3-pip")
 system("sudo mv ../AnonGT /usr/share/AnonGT")
 system("sudo touch anongt /usr/bin")
 system("sudo echo 'python3 /usr/share/AnonGT/AnonGT.py $1' > /usr/bin/anongt")
