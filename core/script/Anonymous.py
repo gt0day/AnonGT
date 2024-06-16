@@ -280,7 +280,7 @@ EnforceDistinctSubnets 1
 
 TrackHostExits .facebook.com,.facebook.net,.twitter.com,.fbcdn.com,.fbcdn.net,.akamaihd.com,.google.com,.google.it,.google.fr,.google.de,.google.br,.yandex.ru,.yandex.com,.gmail.com,.googleapis.com,.gstatic.com,.adform.net,.google-analitics.com,.googletagservices.com
 ExcludeNodes {'US'},{'FR'},{'UK'},{'GB'}
-ExitNodes 217.115.10.132,217.115.10.131,{'kp'},{'af'},{'dz'},{'cu'},{'gm'},{'ht'},{'is'},{'mr'},{'ng'},{'ru'},{'vn'},{'so'}
+#ExitNodes 217.115.10.132,217.115.10.131,{'kp'},{'af'},{'dz'},{'cu'},{'gm'},{'ht'},{'is'},{'mr'},{'ng'},{'ru'},{'vn'},{'so'}
 StrictNodes 1
 """
 
@@ -335,7 +335,7 @@ EnforceDistinctSubnets 1
 
 TrackHostExits .facebook.com,.facebook.net,.twitter.com,.fbcdn.com,.fbcdn.net,.akamaihd.com,.google.com,.google.it,.google.fr,.google.de,.google.br,.yandex.ru,.yandex.com,.gmail.com,.googleapis.com,.gstatic.com,.adform.net,.google-analitics.com,.googletagservices.com
 ExcludeNodes {'US'},{'FR'},{'UK'},{'GB'}
-ExitNodes 217.115.10.132,217.115.10.131,{'kp'},{'af'},{'dz'},{'cu'},{'gm'},{'ht'},{'is'},{'mr'},{'ng'},{'ru'},{'vn'},{'so'}
+#ExitNodes 217.115.10.132,217.115.10.131,{'kp'},{'af'},{'dz'},{'cu'},{'gm'},{'ht'},{'is'},{'mr'},{'ng'},{'ru'},{'vn'},{'so'}
 StrictNodes 1
 
 # Enable bridge mode
