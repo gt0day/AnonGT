@@ -12,10 +12,10 @@ class OnionShare():
                     f"{yellow('Do you want share with public? (Default: private) ')} "
                 ).lower()
                 if cmd == "y":
-                    exec_command(f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Share' -geometry 100x25 -e 'sudo onionshare-cli {share} --public' &")
+                    exec_command(f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Share' -geometry 100x25 -e 'sudo onionshare-cli {share} --public' &")
                 else:
                     exec_command(
-                        f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Share' -geometry 100x25 -e 'sudo onionshare-cli {share}' &")
+                        f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Share' -geometry 100x25 -e 'sudo onionshare-cli {share}' &")
         else:
             ERROR("Must AnonGT Be Stopped.")
 
@@ -27,10 +27,10 @@ class OnionShare():
             ).lower()
             if cmd == "y":
                 exec_command(
-                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Receive' -geometry 100x25 -e 'sudo onionshare-cli --receive --public' &")
+                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Receive' -geometry 100x25 -e 'sudo onionshare-cli --receive --public' &")
             else:
                 exec_command(
-                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Receive' -geometry 100x25 -e 'sudo onionshare-cli --receive' &")
+                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Receive' -geometry 100x25 -e 'sudo onionshare-cli --receive' &")
         else:
             ERROR("Must AnonGT Be Stopped.")
 
@@ -42,10 +42,10 @@ class OnionShare():
             ).lower()
             if cmd == "y":
                 exec_command(
-                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Chat' -geometry 100x25 -e 'sudo onionshare-cli --chat --public' &")
+                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Chat' -geometry 100x25 -e 'sudo onionshare-cli --chat --public' &")
             else:
                 exec_command(
-                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Chat' -geometry 100x25 -e 'sudo onionshare-cli --chat' &")
+                    f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Chat' -geometry 100x25 -e 'sudo onionshare-cli --chat' &")
         else:
             ERROR("Must AnonGT Be Stopped.")
 
@@ -59,9 +59,9 @@ class OnionShare():
                 ).lower()
                 if cmd == "y":
                     exec_command(
-                        f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Share' -geometry 100x25 -e 'sudo onionshare-cli --website {website} --public' &")
+                        f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Host' -geometry 100x25 -e 'sudo onionshare-cli --website {website} --public' &")
                 else:
                     exec_command(
-                        f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'Anonymous Share' -geometry 100x25 -e 'sudo onionshare-cli --website {website}' &")
+                        f"sudo xterm -xrm 'XTerm.vt100.allowTitleOps: false' -T 'AnonGT Host' -geometry 100x25 -e 'sudo onionshare-cli --website {website}' &")
             else:
                 ERROR("Must AnonGT Be Stopped.")
