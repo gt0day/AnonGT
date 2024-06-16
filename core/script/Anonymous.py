@@ -711,11 +711,6 @@ class Anonymous:
 
             # check backup dir
             check_backup_dir()
-            
-            exec_command("sudo service resolvconf stop")
-            MSG("resolvconf stopped")
-            exec_command("sudo killall dnsmasq")
-            MSG("dnsmasq stopped")
 
             # Change Timezone
             change_timezone()
