@@ -50,6 +50,22 @@ def stop_service(s):
     else:
         pass
 
+def enable_services():
+    exec_command("sudo service resolvconf start > /dev/null 2>&1")
+    exec_command("sudo service dnsmasq start > /dev/null 2>&1")
+    exec_command("sudo service nscd start > /dev/null 2>&1")
+    exec_command("sudo service NetworkManager force-reload > /dev/null 2>&1")
+    MSG("Services Enabled")
+
+def disable_services():
+    exec_command("sudo service nscd stop > /dev/null 2>&1")
+    exec_command("sudo service resolvconf stop > /dev/null 2>&1")
+    exec_command("sudo service dnsmasq stop > /dev/null 2>&1")
+    exec_command("sudo killall dnsmasq nscd resolvconf > /dev/null 2>&1")
+    sleep(1)
+    exec_command("sudo killall -9 dnsmasq > /dev/null 2>&1")
+    MSG("Services Disabled")
+
 
 def start_browser_anonymization():
     MSG("firefox browser anonymization started")
@@ -75,7 +91,7 @@ def stop_browser_anonymization():
 # killing dangerous processes & applications
 def safekill():
     WARN("killing dangerous processes & applications")
-    exec_command("service network-manager force-reload > /dev/null 2>&1")
+    exec_command("service NetworkManager force-reload > /dev/null 2>&1")
     # kill processes
     exec_command(
         "killall -q dnsmasq nscd chrome dropbox skype icedove thunderbird firefox firefox-esr chromium xchat hexchat transmission steam firejail pidgin /usr/lib/firefox-esr/firefox-esr"
@@ -642,6 +658,9 @@ class Anonymous:
             # check backup dir
             check_backup_dir()
 
+            # Disabled Services
+            disable_services()
+
             # Change Timezone
             change_timezone()
 
@@ -667,9 +686,6 @@ class Anonymous:
             gen_resolv_conf()
 
             # start tor service
-            exec_command("service network-manager force-reload > /dev/null 2>&1")
-            exec_command("killall dnsmasq > /dev/null 2>&1")
-            exec_command("killall nscd > /dev/null 2>&1")
             start_service("tor")
             sleep(1)
 
@@ -685,7 +701,7 @@ class Anonymous:
             # wipe & clear logs
             wipe()
 
-            exec_command(f"touch {BACKUPDIR}/started")
+            exec_command(f"sudo touch {BACKUPDIR}/started")
             MSG("Anonymous Mode Started")
             MSG("Go to 'https://check.torproject.org/'")
 
@@ -712,6 +728,9 @@ class Anonymous:
             # check backup dir
             check_backup_dir()
 
+            # Disabled Services
+            disable_services()
+
             # Change Timezone
             change_timezone()
 
@@ -737,9 +756,6 @@ class Anonymous:
             gen_resolv_conf()
 
             # start tor service
-            exec_command("service network-manager force-reload > /dev/null 2>&1")
-            exec_command("killall dnsmasq > /dev/null 2>&1")
-            exec_command("killall nscd > /dev/null 2>&1")
             start_service("tor")
 
             # apply new iptables rules
@@ -754,7 +770,7 @@ class Anonymous:
             # wipe & clear logs
             wipe()
 
-            exec_command(f"touch {BACKUPDIR}/started")
+            exec_command(f"sudo touch {BACKUPDIR}/started")
             MSG("Anonymous Mode Started")
             MSG("Go to 'https://check.torproject.org/'")
 
@@ -812,11 +828,14 @@ class Anonymous:
             # stop browser anonymization
             stop_browser_anonymization()
 
+            # Enabled Services
+            enable_services()
+
             # wipe & clear logs
             wipe()
 
-            exec_command("killall tor > /dev/null 2>&1")
-            exec_command(f"rm -f {BACKUPDIR}/started")
+            exec_command("sudo killall tor > /dev/null 2>&1")
+            exec_command(f"sudo rm -f {BACKUPDIR}/started")
             MSG("Anonymous Mode Stopped")
 
     def Status():
@@ -871,6 +890,7 @@ class Anonymous:
         sleep(1)
         MSG("reverted mac addresses")
 
+
     def Fix():
 
         if path.exists(f"{BACKUPDIR}/started"):
@@ -916,7 +936,6 @@ class Anonymous:
     def Wipe():
 
         wipe()
-        clean_dhcp()
         exec_command("sdmem -fllv > /dev/null 2>&1")
 
     def CheckUpdate():
