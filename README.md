@@ -1,6 +1,6 @@
 # AnonGT - Anonymous Ghost
 
-###### Redirect All Traffic Through Tor Network For Kali Linux v0.1.3
+###### Redirect All Traffic Through Tor Network For Kali Linux v0.1.4
 
 ___
 
