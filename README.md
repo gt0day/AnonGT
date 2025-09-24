@@ -52,6 +52,27 @@ ___
 > 9) Close Terminal and open new one then type "sudo anongt"
 
 
+## Installer / Uninstaller scripts
+
+This repository includes two helper scripts to simplify installing AnonGT on Debian-based systems (Kali):
+
+- `scripts/install_anongt.sh` — clones repo, installs dependencies, creates venv, creates `/usr/bin/anongt` launcher, enables `tor`.
+- `scripts/uninstall_anongt.sh` — removes launcher and moves `/usr/share/AnonGT` to a backup.
+
+**Important warnings**
+- **Run only on a VM or a machine you can snapshot/restore.** These scripts install system packages and start `tor`. The AnonGT tool itself may modify `iptables` / `torrc` when executed.
+- **Do not use for illegal activity.** This project and helpers are intended for research and legitimate privacy testing only.
+- **Check the LICENSE.** This repo is a fork/derivative; we preserve and include the original project license (see `LICENSE`).
+
+**Usage**
+```bash
+sudo chmod +x scripts/install_anongt.sh scripts/uninstall_anongt.sh
+sudo ./scripts/install_anongt.sh
+# to remove:
+sudo ./scripts/uninstall_anongt.sh
+
+
+
 ## Notes
 ___
 
